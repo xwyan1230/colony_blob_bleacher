@@ -6,6 +6,7 @@ from matplotlib import pyplot as plt
 import pandas as pd
 from scipy.stats import ks_2samp
 import seaborn as sns
+import matplotlib.colors as colors
 
 """
 # ---------------------------------------------------------------------------------------------------
@@ -80,6 +81,16 @@ Specific output/display (save space in the main script):
         FUNCTION: generate violin plot for given feature
         SYNTAX:   plot_violin(feature: str, pd_data: pd.DataFrame, save_path: str, sample_name: str)
     
+    plot_frap_3d
+        FUNCTION: generate 3d comparison plot for FRAP analysis
+        SYNTAX:   plot_frap_3d(data_WT: pd.DataFrame, data_sample: pd.DataFrame, feature: str, bounds: np.array, 
+                  sample_name: str, feature_name: str, save_path: str)
+    
+    plot_organelle_2d
+        FUNCTION: generate 2d comparison plot for organelle analysis
+        SYNTAX:   plot_organelle_2d(data_WT: pd.DataFrame, data_sample: pd.DataFrame, feature_x: str, 
+                  feature_x_transform: str, feature_x_name: str, feature_y: str, feature_y_transform: str, 
+                  feature_y_name: str, sample_name: str, save_path: str)
 """
 
 # ---------------------------------------------------------------------------------------------------
@@ -564,4 +575,100 @@ def plot_violin(feature: str, pd_data: pd.DataFrame, save_path: str, sample_name
     plt.figure(figsize=(12, 4), dpi=80)
     sns.violinplot(x='sample', y=feature, data=pd_data, notch=False)
     plt.savefig('%s%s_%s.pdf' % (save_path, sample_name, feature))
+    plt.close()
+
+
+def plot_frap_3d(data_WT: pd.DataFrame, data_sample: pd.DataFrame, feature: str, bounds: np.array, sample_name: str,
+                 feature_name: str, save_path: str):
+    """
+    Generate 3d comparison plot for FRAP analysis
+
+    :param data_WT: pd.DataFrame, WT data
+    :param data_sample: pd.DataFrame, sample data
+    :param feature: str, color coding feature, column name
+    :param bounds: np.array, bounds for colormap
+    :param sample_name: str, sample_name, generally is well position name
+    :param feature_name: str, feature name used during saving
+    :param save_path: str, saving path
+    :return:
+    """
+    norm = colors.BoundaryNorm(boundaries=bounds, ncolors=256)
+
+    fig = plt.figure(figsize=(14, 6))
+    ax1 = fig.add_subplot(121, projection='3d')
+    im1 = ax1.scatter(data_WT['nucleoli_size'], data_WT['distance'], np.log(data_WT['pre_bleach_int']), s=5, alpha=0.5,
+                      c=data_WT[feature], norm=norm, cmap='jet', label='%s-WT' % feature_name)
+    ax1.legend()
+    ax1.set_zlabel('ln(pre_bleach_int)')
+    ax1.set_xlabel('organelle size (pixel)')
+    ax1.set_ylabel('distance (pixel)')
+
+    ax2 = fig.add_subplot(122, projection='3d')
+    ax2.scatter(data_sample['nucleoli_size'], data_sample['distance'], np.log(data_sample['pre_bleach_int']), s=5,
+                alpha=0.5, c=data_sample[feature], norm=norm, cmap='jet', label='%s-%s' % (feature_name, sample_name))
+    ax2.legend()
+    ax2.set_zlabel('ln(pre_bleach_int)')
+    ax2.set_xlabel('organelle size (pixel)')
+    ax2.set_ylabel('distance (pixel)')
+
+    cax = ax1.inset_axes([-0.1, 0.1, 0.03, 0.7], transform=ax1.transAxes)
+    fig.colorbar(im1, ax=ax1, cax=cax, extend='both', orientation='vertical')
+
+    plt.savefig('%s%s_3d_%s.pdf' % (save_path, sample_name, feature_name))
+    plt.close()
+
+
+def plot_organelle_2d(data_WT: pd.DataFrame, data_sample: pd.DataFrame, feature_x: str, feature_x_transform: str,
+                      feature_x_name: str, feature_y: str, feature_y_transform: str, feature_y_name: str,
+                      sample_name: str, save_path: str):
+    """
+    Generate 2d comparison plot for organelle analysis
+
+    :param data_WT: pd.DataFrame, WT data
+    :param data_sample: pd.DataFrame, sample data
+    :param feature_x: str, feature plot on x, column name, also used during saving
+    :param feature_x_transform: str, only accepts 'linear' or 'log', transformation performed on feature_x
+    :param feature_x_name: str, feature_x name used on labeling x axis
+    :param feature_y: str, feature plot on y, column name, also used during saving
+    :param feature_y_transform: str, only accepts 'linear' or 'log', transformation performed on feature_y
+    :param feature_y_name: str, feature_y name used on labeling y axis
+    :param sample_name: str, sample_name, generally is well position name
+    :param save_path: str, saving path
+    :return:
+    """
+
+    fig = plt.figure(figsize=(14, 6))
+    ax1 = fig.add_subplot(121)
+
+    if (feature_x != 'circ') & (feature_y != 'circ'):
+        x = np.log(data_WT[feature_x]) if feature_x_transform == 'log' else data_WT[feature_x]
+        y = np.log(data_WT[feature_y]) if feature_y_transform == 'log' else data_WT[feature_y]
+    else:
+        x = np.log(data_WT[data_WT['size'] > 50][feature_x]) if feature_x_transform == 'log' \
+            else data_WT[data_WT['size'] > 50][feature_x]
+        y = np.log(data_WT[data_WT['size'] > 50][feature_y]) if feature_y_transform == 'log' \
+            else data_WT[data_WT['size'] > 50][feature_y]
+
+    ax1.scatter(x, y, s=3, alpha=0.5, c='#A9A9A9', label='WT')
+    ax1.set_xlabel(feature_x_name)
+    ax1.set_ylabel(feature_y_name)
+    ax1.legend()
+
+    ax2 = fig.add_subplot(122)
+
+    if (feature_x != 'circ') & (feature_y != 'circ'):
+        x = np.log(data_sample[feature_x]) if feature_x_transform == 'log' else data_sample[feature_x]
+        y = np.log(data_sample[feature_y]) if feature_y_transform == 'log' else data_sample[feature_y]
+    else:
+        x = np.log(data_sample[data_sample['size'] > 50][feature_x]) if feature_x_transform == 'log' \
+            else data_sample[data_sample['size'] > 50][feature_x]
+        y = np.log(data_sample[data_sample['size'] > 50][feature_y]) if feature_y_transform == 'log' \
+            else data_sample[data_sample['size'] > 50][feature_y]
+
+    ax2.scatter(x, y, s=3, alpha=0.5, c='#DC143C', label='%s' % sample_name)
+    ax2.set_xlabel(feature_x_name)
+    ax2.set_ylabel(feature_y_name)
+    ax2.legend()
+
+    plt.savefig('%s%s_%s-%s.pdf' % (save_path, sample_name, feature_x, feature_y))
     plt.close()
