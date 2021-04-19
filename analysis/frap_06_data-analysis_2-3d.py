@@ -21,8 +21,24 @@ multi_dirs = [x for x in os.listdir(multi_data_source)]
 if '.DS_Store' in multi_dirs:
     multi_dirs.remove('.DS_Store')
 
+data_name = []
+data_frap_n_curve = []
+mob = []
+curve_mob = []
+t_half = []
+curve_t_half = []
+slope = []
+curve_slope = []
+data_organelle_n = []
+size = []
+raw_int = []
+data_organelle_n_circ = []
+circ = []
+ecce = []
+
 for r in range(len(multi_dirs)):
     name = multi_dirs[r]
+    data_name.append(name)
     print('# Analyzing %s ... (%d/%d)' % (name, r+1, len(multi_dirs)))
     data_source = ("%s%s/" % (multi_data_source, name))
     save_path = ("%s%s/" % (save_source, name))
@@ -31,8 +47,18 @@ for r in range(len(multi_dirs)):
 
     data_sample = pd.read_csv(("%s%s_data_full.txt" % (data_source, name)), na_values=['.'], sep='\t')
     data_sample_ft = data_sample[data_sample['frap_filter_%s' % analysis_mode] == 1]
+    data_frap_n_curve.append(len(data_sample_ft))
+
     data_WT = pd.read_csv(("%sWT_data_full.txt" % WT_source), na_values=['.'], sep='\t')
     data_WT_ft = data_WT[data_WT['frap_filter_%s' % analysis_mode] == 1]
+
+    # save average data
+    mob.append(np.mean(data_sample_ft['%s_mobile_fraction' % analysis_mode]))
+    curve_mob.append(np.mean(data_sample_ft['mobile_fraction']))
+    t_half.append(np.mean(data_sample_ft['%s_t_half' % analysis_mode]))
+    curve_t_half.append(np.mean(data_sample_ft['t_half']))
+    slope.append(np.mean(data_sample_ft['%s_slope' % analysis_mode]))
+    curve_slope.append(np.mean(data_sample_ft['linear_slope']))
 
     # export FRAP 3d images
     print("# Export mobile_fraction 3d plot ...")
@@ -55,6 +81,15 @@ for r in range(len(multi_dirs)):
         data_sample_organelle = pd.read_csv(("%s%s_data_sg.txt" % (data_source, name)), na_values=['.'], sep='\t')
         data_WT_organelle = pd.read_csv(("%sWT_data_sg.txt" % WT_source), na_values=['.'], sep='\t')
 
+    data_organelle_n.append(len(data_sample_organelle))
+    data_organelle_n_circ.append(len(data_sample_organelle[data_sample_organelle['size'] > 50]))
+
+    # save average data
+    size.append(np.mean(data_sample_organelle['size']))
+    raw_int.append(np.mean(data_sample_organelle['raw_int']))
+    circ.append(np.mean(data_sample_organelle[data_sample_organelle['size'] > 50]['circ']))
+    ecce.append(np.mean(data_sample_organelle['eccentricity']))
+
     # export organelle 2d images
     print("# Export organelle 2d images ...")
     dis.plot_organelle_2d(data_WT_organelle, data_sample_organelle, 'raw_int', 'log', 'ln(raw intensity)',
@@ -69,6 +104,17 @@ for r in range(len(multi_dirs)):
                           'eccentricity', 'linear', 'eccentricity', name, save_path)
     dis.plot_organelle_2d(data_WT_organelle, data_sample_organelle, 'size', 'linear', 'size (pixel)',
                           'circ', 'linear', 'circularity', name, save_path)
+
+data_frap = pd.DataFrame({'sample': data_name, 'n_curve': data_frap_n_curve, 'mob': mob, 'curve_mob': curve_mob,
+                          't_half': t_half, 'curve_t_half': curve_t_half, 'slope': slope, 'curve_slope': curve_slope,
+                          'n_organelle': data_organelle_n, 'size_organelle': size, 'raw_int_organelle': raw_int,
+                          'n_organelle_circ': data_organelle_n_circ, 'circ_organelle': circ, 'ecce_organelle': ecce})
+
+save_path = ("%ssummary/" % save_source)
+if not os.path.exists(save_path):
+    os.makedirs(save_path)
+
+data_frap.to_csv('%ssummary_value.txt' % save_path, index=False, sep='\t')
 
 print("DONE!")
 
