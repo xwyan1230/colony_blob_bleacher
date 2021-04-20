@@ -14,10 +14,11 @@ import os
 
 # Please changes
 # data_source folder ends with /
-multi_data_source = "D:/Xiaowei/data/20210407_SG_frap/data/"
+multi_data_source = "D:/Xiaowei/data/20210415_CBB_nucleoliFRAPscreen2/plate1/data/"
 save_name = 'dataAnalysis'
-analyze_organelle = 'sg'  # only accepts 'sg' or 'nucleoli'
+analyze_organelle = 'nucleoli'  # only accepts 'sg' or 'nucleoli'
 frap_start_delay = 4  # 50ms default = 4; 100ms default = 5; 200ms default = 6
+analysis_row = ['B']
 
 # values for analysis
 data_c = 0
@@ -52,6 +53,13 @@ fitting_mode = 'single_exp'  # accepts 'single_exp', 'double_exp', 'soumpasis', 
 multi_dirs = [x for x in os.listdir(multi_data_source)]
 if '.DS_Store' in multi_dirs:
     multi_dirs.remove('.DS_Store')
+
+# filter analysis data based on row name
+multi_dirs_temp = []
+for r in multi_dirs:
+    if r[0] in analysis_row:
+        multi_dirs_temp.append(r)
+multi_dirs = multi_dirs_temp
 
 for r in range(len(multi_dirs)):
     data_source = ("%s%s/" % (multi_data_source, multi_dirs[r]))
