@@ -3,12 +3,9 @@ import pandas as pd
 import shared.display as dis
 import numpy as np
 
-multi_data_source = "/Users/xiaoweiyan/Dropbox/LAB/ValeLab/Projects/Blob_bleacher/Exp/"\
-    "20210408_CBB_nucleoliFRAPscreen1/dataFiles/"
-WT_source = "/Users/xiaoweiyan/Dropbox/LAB/ValeLab/Projects/Blob_bleacher/Exp/"\
-    "20210408_CBB_nucleoliFRAPscreen1/WTFiles/"
-save_source = "/Users/xiaoweiyan/Dropbox/LAB/ValeLab/Projects/Blob_bleacher/Exp/"\
-    "20210408_CBB_nucleoliFRAPscreen1/dataPlots/"
+multi_data_source = "D:/Xiaowei/data/20210415_CBB_nucleoliFRAPscreen2/plate1/dataFiles/"
+WT_source = "D:/Xiaowei/data/20210415_CBB_nucleoliFRAPscreen2/plate1/WTFiles/NT_G2-G3/"
+save_source = "D:/Xiaowei/data/20210415_CBB_nucleoliFRAPscreen2/plate1/dataPlots/NT_G2-G3/"
 
 analyze_organelle = 'nucleoli'  # only accepts 'sg' or 'nucleoli'
 analysis_mode = 'single_exp'
