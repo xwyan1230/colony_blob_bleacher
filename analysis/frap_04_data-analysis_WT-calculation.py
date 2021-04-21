@@ -1,11 +1,9 @@
 import pandas as pd
 import os
 
-data_source = "/Users/xiaoweiyan/Dropbox/LAB/ValeLab/Projects/Blob_bleacher/Data/"\
-    "20210408_CBB_nucleoliFRAPscreen1/dataFiles/"
-save_source = "/Users/xiaoweiyan/Dropbox/LAB/ValeLab/Projects/Blob_bleacher/Data/"\
-    "20210408_CBB_nucleoliFRAPscreen1/WTFiles/"
-WT_lst = ['G10', 'G11']
+data_source = "D:/Xiaowei/data/20210415_CBB_nucleoliFRAPscreen2/plate2/dataFiles/"
+save_source = "D:/Xiaowei/data/20210415_CBB_nucleoliFRAPscreen2/plate2/WTFiles/NT_F2-F3/"
+WT_lst = ['F2', 'F3']
 analyze_organelle = 'nucleoli'  # only accepts 'nucleoli' or 'sg'
 
 data_WT = pd.DataFrame()
