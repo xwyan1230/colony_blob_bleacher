@@ -18,7 +18,7 @@ multi_data_source = "D:/Xiaowei/data/20210415_CBB_nucleoliFRAPscreen2/plate1/dat
 save_name = 'dataAnalysis'
 analyze_organelle = 'nucleoli'  # only accepts 'sg' or 'nucleoli'
 frap_start_delay = 4  # 50ms default = 4; 100ms default = 5; 200ms default = 6
-analysis_row = ['B']
+analysis_row = ['G']
 
 # values for analysis
 data_c = 0
