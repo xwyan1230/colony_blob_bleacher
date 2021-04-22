@@ -3,9 +3,9 @@ import shared.display as dis
 import os
 
 data_source = "/Users/xiaoweiyan/Dropbox/LAB/ValeLab/Projects/Blob_bleacher/Exp/"\
-    "20210415_CBB_nucleoliFRAPscreen2_summary/summary/NT/"
+    "20210415_CBB_nucleoliFRAPscreen2/plate2/summary/NT/"
 save_source = "/Users/xiaoweiyan/Dropbox/LAB/ValeLab/Projects/Blob_bleacher/Exp/"\
-    "20210415_CBB_nucleoliFRAPscreen2_summary/volcanoPlots/NT/"
+    "20210415_CBB_nucleoliFRAPscreen2/plate2/volcanoPlots/NT/"
 
 data_p = pd.read_csv(("%ssummary_p.txt" % data_source), na_values=['.'], sep='\t')
 data_value = pd.read_csv(("%ssummary_value.txt" % data_source), na_values=['.'], sep='\t')
