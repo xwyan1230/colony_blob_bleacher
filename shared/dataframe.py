@@ -485,3 +485,19 @@ def get_normalized(df: pd.DataFrame, feature: str, name: str):
     temp1 = df[feature].tolist()[len(df)-1]
     df[name] = (df[feature]-temp0)/(temp1-temp0)
     return df
+
+
+def correlate_genetable(df: pd.DataFrame, genetable: pd.DataFrame):
+    """
+    Correlate FRAP screen well name with gene name
+    :param df: pd.DataFrame, sample data
+    :param genetable: pd.DataFrame, genetable
+    :return:
+    """
+    gene_lst = []
+    for i in range(len(df)):
+        gene = genetable[genetable['well'] == df['sample'][i]]['gene'].tolist()[0]
+        gene_lst.append(gene)
+    df['gene'] = gene_lst
+
+    return df
