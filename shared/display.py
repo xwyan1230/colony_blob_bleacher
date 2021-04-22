@@ -672,3 +672,18 @@ def plot_organelle_2d(data_WT: pd.DataFrame, data_sample: pd.DataFrame, feature_
 
     plt.savefig('%s%s_%s-%s.pdf' % (save_path, sample_name, feature_x, feature_y))
     plt.close()
+
+
+def plot_volcano(pd_p: pd.DataFrame, pd_value: pd.DataFrame, feature: str, save_path: str):
+    plt.figure(figsize=(6, 4))
+    plt.scatter(pd_value[feature], pd_p[feature], s=3, alpha=0.5, c='#A9A9A9')
+    plt.scatter(pd_value[pd_value['gene'] == 'NT'][feature], pd_p[pd_p['gene'] == 'NT'][feature], s=3, c='#00BFFF',
+                label='NT')
+    plt.scatter(pd_value[pd_value['gene'] == 'WT'][feature], pd_p[pd_p['gene'] == 'WT'][feature], s=3, c='#4169E1',
+                label='WT')
+    plt.xlabel(feature)
+    plt.ylabel('-ln(p)')
+    plt.legend()
+
+    plt.savefig('%s%s.pdf' % (save_path, feature))
+    plt.close()
