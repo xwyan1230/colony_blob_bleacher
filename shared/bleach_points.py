@@ -56,7 +56,7 @@ pd.DataFrame related:
 
 
 def get_bleach_spots_coordinates(log_pd: pd.DataFrame, store, cb, data_c: int, mode: str, frap_start_delay: int,
-                                 max_p: int):
+                                 max_t: int):
     """
     Get coordinates of bleach spots
 
@@ -102,8 +102,8 @@ def get_bleach_spots_coordinates(log_pd: pd.DataFrame, store, cb, data_c: int, m
             bleach_frame = int(log_pd['bleach_frame'][i])
 
             # subtract minimum intensity image pix(bleach_frame+4) and image before photobleaching
-            if bleach_frame+frap_start_delay > max_p:
-                post_frame = max_p
+            if bleach_frame+frap_start_delay > (max_t-1):
+                post_frame = max_t-1
             else:
                 post_frame = bleach_frame+frap_start_delay
             post = store.get_image(cb.p(0).z(0).c(data_c).t(post_frame).build())
