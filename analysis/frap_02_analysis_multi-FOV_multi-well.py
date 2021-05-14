@@ -100,7 +100,6 @@ for r in range(len(multi_dirs)):
         cb.t(0).p(0).c(0).z(0)
         # get max_t and acquisition time
         max_t = store.get_max_indices().get_t()
-        max_p = store.get_max_indices().get_p()
         pixels_tseries = dat.get_pixels_tseries(store, cb, data_c)
         acquire_time_tseries, real_time = dat.get_time_tseries(store, cb)
         data_log['acquire_time'] = [acquire_time_tseries]
@@ -161,7 +160,7 @@ for r in range(len(multi_dirs)):
 
         # get bleach spot coordinate
         coordinate_pd = ble.get_bleach_spots_coordinates(log_pd, store, cb, data_c, mode_bleach_detection,
-                                                         frap_start_delay, max_p)
+                                                         frap_start_delay, max_t)
         log_pd = pd.concat([log_pd, coordinate_pd], axis=1)
 
         # link pointer with corresponding organelle
