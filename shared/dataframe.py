@@ -203,7 +203,7 @@ def find_pos(value: int or float, increase_lst: list):
                 the given value, start from 0
 
     """
-    out = len(increase_lst)
+    out = len(increase_lst)-1
     i = 0
     while i < len(increase_lst):
         if value <= increase_lst[i]:
