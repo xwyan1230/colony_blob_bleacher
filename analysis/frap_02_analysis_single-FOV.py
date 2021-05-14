@@ -87,12 +87,10 @@ DISPLAYS
 # PARAMETERS allow change
 # --------------------------
 # Please changes
-data_path = "D:/Xiaowei/data/20210319_CBB_nucleoliFRAPexposureIntensityAndNonCentroidPhotobleachingTest/"\
-                "WT_random/C10-Site_7_1"
-save_path = "D:/Xiaowei/data/20210319_CBB_nucleoliFRAPexposureIntensityAndNonCentroidPhotobleachingTest/dataAnalysis1/"\
-                "WT_random/C10-Site_7_1"
+data_path = "/Users/xiaoweiyan/Dropbox/LAB/ValeLab/Projects/Blob_bleacher/Data/20210504/D10-Site_11_1/"
+save_path = "/Users/xiaoweiyan/Dropbox/LAB/ValeLab/Projects/Blob_bleacher/Data/20210504/D10-Site_11_1/"
 analyze_organelle = 'nucleoli'  # only accepts 'sg' or 'nucleoli'
-frap_start_delay = 6  # 50ms default = 4; 100ms default = 5; 200ms default = 6
+frap_start_delay = 4  # 50ms default = 4; 100ms default = 5; 200ms default = 6
 display_mode = 'Y'  # only accepts 'N' or 'Y'
 display_sort = 'pre_bleach_int'  # accepts 'na' or other features like 'sg_size'
 
@@ -143,6 +141,7 @@ cb = mm.data().get_coords_builder()
 cb.t(0).p(0).c(0).z(0)
 # get max_t and acquisition time
 max_t = store.get_max_indices().get_t()
+max_p = store.get_max_indices().get_p()
 pixels_tseries = dat.get_pixels_tseries(store, cb, data_c)
 acquire_time_tseries, real_time = dat.get_time_tseries(store, cb)
 data_log['acquire_time'] = [acquire_time_tseries]
@@ -202,7 +201,8 @@ log_pd.columns = ['time', 'aim_x', 'aim_y']  # reformat log_pd
 log_pd['bleach_frame'] = dat.get_frame(log_pd['time'], acquire_time_tseries)
 
 # get bleach spot coordinate
-coordinate_pd = ble.get_bleach_spots_coordinates(log_pd, store, cb, data_c, mode_bleach_detection, frap_start_delay)
+coordinate_pd = ble.get_bleach_spots_coordinates(log_pd, store, cb, data_c, mode_bleach_detection, frap_start_delay,
+                                                 max_p)
 log_pd = pd.concat([log_pd, coordinate_pd], axis=1)
 
 # link pointer with corresponding organelle
