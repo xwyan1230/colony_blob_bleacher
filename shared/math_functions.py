@@ -334,7 +334,7 @@ def frap_fitting_single_exp(time_tseries_lst: list, frap_lst: list, sigma_lst: l
         try:
             popt, _ = curve_fit(single_exp, time_tseries_lst[i], frap_lst[i])
             a, b = popt
-        except RuntimeError:
+        except (RuntimeError, TypeError, ValueError):
             a = np.nan
             b = np.nan
 
@@ -402,7 +402,7 @@ def frap_fitting_soumpasis(time_tseries_lst: list, frap_lst: list, sigma_lst: li
         try:
             popt, _ = curve_fit(soumpasis, x, y)
             a, tau = popt
-        except RuntimeError:
+        except (RuntimeError, TypeError, ValueError):
             a = np.nan
             tau = np.nan
 
@@ -471,7 +471,7 @@ def frap_fitting_double_exp(time_tseries_lst: list, frap_lst: list, sigma_lst: l
         try:
             popt, _ = curve_fit(double_exp, time_tseries_lst[i], frap_lst[i])
             a1, a2, b1, b2 = popt
-        except RuntimeError:
+        except (RuntimeError, TypeError, ValueError):
             a1 = np.nan
             a2 = np.nan
             b1 = np.nan
@@ -549,7 +549,7 @@ def frap_fitting_ellenberg(time_tseries_lst: list, frap_lst: list, sigma_lst: li
         try:
             popt, _ = curve_fit(ellenberg, x, y)
             a, d = popt
-        except RuntimeError:
+        except (RuntimeError, TypeError, ValueError):
             a = np.nan
             d = np.nan
 
@@ -606,7 +606,7 @@ def find_optimal_fitting(pointer_pd: pd.DataFrame, compare_functions: list):
     optimal_slope = []
 
     for i in range(len(pointer_pd)):
-        f = 'na'
+        f = 'single_exp'
         q = 0
         chi2 = 10000000
         for m in compare_functions:
@@ -654,7 +654,7 @@ def frap_fitting_linear(time_tseries_lst: list, frap_lst: list):
         try:
             popt, _ = curve_fit(linear, time_tseries_lst[i][:5], frap_lst[i][:5])
             a, b = popt
-        except RuntimeError:
+        except (RuntimeError, TypeError, ValueError):
             a = np.nan
             b = np.nan
 
