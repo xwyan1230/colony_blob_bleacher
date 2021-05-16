@@ -1,15 +1,26 @@
 import pandas as pd
 import shared.display as dis
+import numpy as np
 import os
 
-data_source = "/Users/xiaoweiyan/Dropbox/LAB/ValeLab/Projects/Blob_bleacher/Exp/"\
-    "20210408_CBB_nucleoliFRAPscreen1/plate1/summary/WT/"
-save_source = "/Users/xiaoweiyan/Dropbox/LAB/ValeLab/Projects/Blob_bleacher/Exp/"\
-    "20210408_CBB_nucleoliFRAPscreen1/plate1/volcanoPlots/WT/"
+data_source = "D:/Xiaowei/data/20210510_ctrlComparison/summary/WT/"
+save_source = "D:/Xiaowei/data/20210510_ctrlComparison/volcanoPlots/WT/"
+WT_source = "D:/Xiaowei/data/20210510/WTFiles/WT_B2-B3-B4/"
 
+analyze_organelle = 'nucleoli'
+analysis_mode = 'single_exp'
 features = ['mob', 'curve_mob', 't_half', 'curve_t_half', 'slope', 'curve_slope', 'size_organelle', 'raw_int_organelle',
             'circ_organelle', 'ecce_organelle']
-centers = [0.67, 0.68, 1.325, 1.17, 0.35, 0.475, 130, 2250, 0.8, 0.65]
+
+data_WT = pd.read_csv(("%sWT_data_full.txt" % WT_source), na_values=['.'], sep='\t')
+data_WT_ft = data_WT[data_WT['frap_filter_%s' % analysis_mode] == 1]
+data_WT_organelle = pd.read_csv(("%sWT_data_%s.txt" % (WT_source, analyze_organelle)), na_values=['.'], sep='\t')
+centers = [np.mean(data_WT_ft['%s_mobile_fraction' % analysis_mode]), np.mean(data_WT_ft['mobile_fraction']),
+           np.mean(data_WT_ft['%s_t_half' % analysis_mode]), np.mean(data_WT_ft['t_half']),
+           np.mean(data_WT_ft['%s_slope' % analysis_mode]), np.mean(data_WT_ft['linear_slope']),
+           np.mean(data_WT_organelle['size']), np.mean(data_WT_organelle['raw_int']),
+           np.mean(data_WT_organelle[data_WT_organelle['size'] > 50]['circ']),
+           np.mean(data_WT_organelle['eccentricity'])]
 
 data_p = pd.read_csv(("%ssummary_p.txt" % data_source), na_values=['.'], sep='\t')
 data_value = pd.read_csv(("%ssummary_value.txt" % data_source), na_values=['.'], sep='\t')
