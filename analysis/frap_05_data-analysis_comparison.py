@@ -2,13 +2,14 @@ import os
 import pandas as pd
 import shared.display as dis
 
-multi_data_source = "D:/Xiaowei/data/20210415_CBB_nucleoliFRAPscreen2/plate1/dataFiles/"
-WT_source = "D:/Xiaowei/data/20210415_CBB_nucleoliFRAPscreen2/plate1/WTFiles/NT_G2-G3/"
-save_source = "D:/Xiaowei/data/20210415_CBB_nucleoliFRAPscreen2/plate1/dataSummary/NT_G2-G3_1/"
-ctrl_lst = ['B5', 'B6', 'G2', 'G3']
+multi_data_source = "D:/Xiaowei/data/20210510_ctrlComparison/dataFiles/"
+WT_source = "D:/Xiaowei/data/20210510/WTFiles/WT_B2-B3-B4/"
+save_source = "D:/Xiaowei/data/20210510_ctrlComparison/dataSummary/WT_P1-P2_P3/"
+ctrl_lst = ['P1', 'P2', 'P3']
 
 analyze_organelle = 'nucleoli'  # only accepts 'sg' or 'nucleoli'
 analysis_mode = 'single_exp'
+export_figure_mode = 'off'
 
 inc = 5
 limit_frap = 250
@@ -31,10 +32,9 @@ curve_slope = data_original_WT_ft['linear_slope'].tolist()
 sample = ['WT'] * len(data_original_WT_ft)
 
 # Organelle analysis
-if analyze_organelle == 'nucleoli':
-    data_original_WT_organelle = pd.read_csv(("%sWT_data_nucleoli.txt" % WT_source), na_values=['.'], sep='\t')
-elif analyze_organelle == 'sg':
-    data_original_WT_organelle = pd.read_csv(("%sWT_data_sg.txt" % WT_source), na_values=['.'], sep='\t')
+data_original_WT_organelle = pd.read_csv(("%sWT_data_%s.txt" % (WT_source, analyze_organelle)), na_values=['.'],
+                                         sep='\t')
+
 size = data_original_WT_organelle['size'].tolist()
 raw_int = data_original_WT_organelle['raw_int'].tolist()
 circ = data_original_WT_organelle['circ'].tolist()
@@ -53,12 +53,9 @@ for i in ctrl_lst:
     curve_slope = curve_slope + data_temp_ft['linear_slope'].tolist()
     sample = sample + [i] * len(data_temp_ft)
 
-    if analyze_organelle == 'nucleoli':
-        data_organelle_temp = pd.read_csv(("%s%s/%s_data_nucleoli.txt" % (multi_data_source, i, i)),
-                                          na_values=['.'], sep='\t')
-    elif analyze_organelle == 'sg':
-        data_organelle_temp = pd.read_csv(("%s%s/%s_data_sg.txt" % (multi_data_source, i, i)),
-                                          na_values=['.'], sep='\t')
+    data_organelle_temp = pd.read_csv(("%s%s/%s_data_%s.txt" % (multi_data_source, i, i, analyze_organelle)),
+                                      na_values=['.'], sep='\t')
+
     size = size + data_organelle_temp['size'].tolist()
     raw_int = raw_int + data_organelle_temp['raw_int'].tolist()
     circ = circ + data_organelle_temp['circ'].tolist()
@@ -89,8 +86,6 @@ for r in range(len(multi_dirs)):
     data_name.append(name)
     data_source = ("%s%s/" % (multi_data_source, name))
     save_path = ("%s%s/" % (save_source, name))
-    if not os.path.exists(save_path):
-        os.makedirs(save_path)
 
     # organize data into one dataframe
     data_temp = pd.read_csv(("%s%s/%s_data_full.txt" % (multi_data_source, name, name)), na_values=['.'], sep='\t')
@@ -103,12 +98,9 @@ for r in range(len(multi_dirs)):
     curve_slope_sample = curve_slope + data_temp_ft['linear_slope'].tolist()
     sample_sample = sample + [name] * len(data_temp_ft)
 
-    if analyze_organelle == 'nucleoli':
-        data_organelle_temp = pd.read_csv(("%s%s/%s_data_nucleoli.txt" % (multi_data_source, name, name)),
-                                          na_values=['.'], sep='\t')
-    elif analyze_organelle == 'sg':
-        data_organelle_temp = pd.read_csv(("%s%s/%s_data_sg.txt" % (multi_data_source, name, name)),
-                                          na_values=['.'], sep='\t')
+    data_organelle_temp = pd.read_csv(("%s%s/%s_data_%s.txt" % (multi_data_source, name, name, analyze_organelle)),
+                                      na_values=['.'], sep='\t')
+
     size_sample = size + data_organelle_temp['size'].tolist()
     raw_int_sample = raw_int + data_organelle_temp['raw_int'].tolist()
     circ_sample = circ + data_organelle_temp['circ'].tolist()
@@ -125,60 +117,83 @@ for r in range(len(multi_dirs)):
     data_sample = data[data['sample'] == name]
     data_WT = data[data['sample'] == 'WT']
     data_frap_n_curve.append(len(data_sample))
-    data_frap_phenotype_limit.append(dis.get_phenotype(data_WT, data_sample, 'mob', limit_frap, repeat)[0])
-    data_frap_phenotype_mob.append(dis.get_phenotype(data_WT, data_sample, 'mob', limit_frap, repeat)[1])
-    data_frap_phenotype_curve_mob.append(dis.get_phenotype(data_WT, data_sample, 'curve_mob', limit_frap, repeat)[1])
-    data_frap_phenotype_t_half.append(dis.get_phenotype(data_WT, data_sample, 't_half', limit_frap, repeat)[1])
-    data_frap_phenotype_curve_t_half.append(dis.get_phenotype(data_WT, data_sample, 'curve_t_half',
-                                                              limit_frap, repeat)[1])
-    data_frap_phenotype_slope.append(dis.get_phenotype(data_WT, data_sample, 'slope', limit_frap, repeat)[1])
-    data_frap_phenotype_curve_slope.append(dis.get_phenotype(data_WT, data_sample, 'curve_slope',
-                                                             limit_frap, repeat)[1])
+    if len(data_sample) != 0:
+        data_frap_phenotype_limit.append(dis.get_phenotype(data_WT, data_sample, 'mob', limit_frap, repeat)[0])
+        data_frap_phenotype_mob.append(dis.get_phenotype(data_WT, data_sample, 'mob', limit_frap, repeat)[1])
+        data_frap_phenotype_curve_mob.append(dis.get_phenotype(data_WT, data_sample, 'curve_mob', limit_frap,
+                                                               repeat)[1])
+        data_frap_phenotype_t_half.append(dis.get_phenotype(data_WT, data_sample, 't_half', limit_frap, repeat)[1])
+        data_frap_phenotype_curve_t_half.append(dis.get_phenotype(data_WT, data_sample, 'curve_t_half',
+                                                                  limit_frap, repeat)[1])
+        data_frap_phenotype_slope.append(dis.get_phenotype(data_WT, data_sample, 'slope', limit_frap, repeat)[1])
+        data_frap_phenotype_curve_slope.append(dis.get_phenotype(data_WT, data_sample, 'curve_slope',
+                                                                 limit_frap, repeat)[1])
+    else:
+        data_frap_phenotype_limit.append(0)
+        data_frap_phenotype_mob.append(0)
+        data_frap_phenotype_curve_mob.append(0)
+        data_frap_phenotype_t_half.append(0)
+        data_frap_phenotype_curve_t_half.append(0)
+        data_frap_phenotype_slope.append(0)
+        data_frap_phenotype_curve_slope.append(0)
 
     data_sample_organelle = data_organelle[data_organelle['sample'] == name]
     data_WT_organelle = data_organelle[data_organelle['sample'] == 'WT']
     data_organelle_n.append(len(data_sample_organelle))
-    data_organelle_phenotype_limit.append(dis.get_phenotype(data_WT_organelle, data_sample_organelle, 'size',
-                                                            limit_organelle, repeat)[0])
-    data_organelle_phenotype_size.append(dis.get_phenotype(data_WT_organelle, data_sample_organelle, 'size',
-                                                           limit_organelle, repeat)[1])
-    data_organelle_phenotype_int.append(dis.get_phenotype(data_WT_organelle, data_sample_organelle, 'raw_int',
-                                                          limit_organelle, repeat)[1])
-    data_organelle_phenotype_limit_circ.append(dis.get_phenotype(data_WT_organelle, data_sample_organelle, 'circ',
-                                                                 limit_organelle, repeat)[0])
-    data_organelle_phenotype_circ.append(dis.get_phenotype(data_WT_organelle, data_sample_organelle, 'circ',
-                                                           limit_organelle, repeat)[1])
-    data_organelle_phenotype_ecce.append(dis.get_phenotype(data_WT_organelle, data_sample_organelle, 'ecce',
-                                                           limit_organelle, repeat)[1])
+    if len(data_sample_organelle) != 0:
+        data_organelle_phenotype_limit.append(dis.get_phenotype(data_WT_organelle, data_sample_organelle, 'size',
+                                                                limit_organelle, repeat)[0])
+        data_organelle_phenotype_size.append(dis.get_phenotype(data_WT_organelle, data_sample_organelle, 'size',
+                                                               limit_organelle, repeat)[1])
+        data_organelle_phenotype_int.append(dis.get_phenotype(data_WT_organelle, data_sample_organelle, 'raw_int',
+                                                              limit_organelle, repeat)[1])
+        data_organelle_phenotype_limit_circ.append(dis.get_phenotype(data_WT_organelle, data_sample_organelle, 'circ',
+                                                                     limit_organelle, repeat)[0])
+        data_organelle_phenotype_circ.append(dis.get_phenotype(data_WT_organelle, data_sample_organelle, 'circ',
+                                                               limit_organelle, repeat)[1])
+        data_organelle_phenotype_ecce.append(dis.get_phenotype(data_WT_organelle, data_sample_organelle, 'ecce',
+                                                               limit_organelle, repeat)[1])
+    else:
+        data_organelle_phenotype_limit.append(0)
+        data_organelle_phenotype_size.append(0)
+        data_organelle_phenotype_int.append(0)
+        data_organelle_phenotype_limit_circ.append(0)
+        data_organelle_phenotype_circ.append(0)
+        data_organelle_phenotype_ecce.append(0)
 
-    # export images
-    print("# Export mobile_fraction -ln(p) ...")
-    dis.plot_minus_ln_p(inc, limit_frap, repeat, 'mob', data, ctrl_lst, name, save_path)
-    dis.plot_minus_ln_p(inc, limit_frap, repeat, 'curve_mob', data, ctrl_lst, name, save_path)
-    print("# Export t_half -ln(p) ...")
-    dis.plot_minus_ln_p(inc, limit_frap, repeat, 't_half', data, ctrl_lst, name, save_path)
-    dis.plot_minus_ln_p(inc, limit_frap, repeat, 'curve_t_half', data, ctrl_lst, name, save_path)
-    print("# Export slope -ln(p) ...")
-    dis.plot_minus_ln_p(inc, limit_frap, repeat, 'slope', data, ctrl_lst, name, save_path)
-    dis.plot_minus_ln_p(inc, limit_frap, repeat, 'curve_slope', data, ctrl_lst, name, save_path)
-    print("# Export FRAP violin plots ...")
-    dis.plot_violin('mob', data, save_path, name)
-    dis.plot_violin('curve_mob', data, save_path, name)
-    dis.plot_violin('t_half', data, save_path, name)
-    dis.plot_violin('curve_t_half', data, save_path, name)
-    dis.plot_violin('slope', data, save_path, name)
-    dis.plot_violin('curve_slope', data, save_path, name)
+    if export_figure_mode == 'on':
+        if not os.path.exists(save_path):
+            os.makedirs(save_path)
+        if len(data_sample) != 0:
+            # export images
+            print("# Export mobile_fraction -ln(p) ...")
+            dis.plot_minus_ln_p(inc, limit_frap, repeat, 'mob', data, ctrl_lst, name, save_path)
+            dis.plot_minus_ln_p(inc, limit_frap, repeat, 'curve_mob', data, ctrl_lst, name, save_path)
+            print("# Export t_half -ln(p) ...")
+            dis.plot_minus_ln_p(inc, limit_frap, repeat, 't_half', data, ctrl_lst, name, save_path)
+            dis.plot_minus_ln_p(inc, limit_frap, repeat, 'curve_t_half', data, ctrl_lst, name, save_path)
+            print("# Export slope -ln(p) ...")
+            dis.plot_minus_ln_p(inc, limit_frap, repeat, 'slope', data, ctrl_lst, name, save_path)
+            dis.plot_minus_ln_p(inc, limit_frap, repeat, 'curve_slope', data, ctrl_lst, name, save_path)
+            print("# Export FRAP violin plots ...")
+            dis.plot_violin('mob', data, save_path, name)
+            dis.plot_violin('curve_mob', data, save_path, name)
+            dis.plot_violin('t_half', data, save_path, name)
+            dis.plot_violin('curve_t_half', data, save_path, name)
+            dis.plot_violin('slope', data, save_path, name)
+            dis.plot_violin('curve_slope', data, save_path, name)
 
-    print("# Export organelle -ln(p) ...")
-    dis.plot_minus_ln_p(inc, limit_organelle, repeat, 'size', data_organelle, ctrl_lst, name, save_path)
-    dis.plot_minus_ln_p(inc, limit_organelle, repeat, 'raw_int', data_organelle, ctrl_lst, name, save_path)
-    dis.plot_minus_ln_p(inc, limit_organelle, repeat, 'circ', data_organelle, ctrl_lst, name, save_path)
-    dis.plot_minus_ln_p(inc, limit_organelle, repeat, 'ecce', data_organelle, ctrl_lst, name, save_path)
-    print("# Export organelle violin plots ...")
-    dis.plot_violin('size', data_organelle, save_path, name)
-    dis.plot_violin('raw_int', data_organelle, save_path, name)
-    dis.plot_violin('circ', data_organelle, save_path, name)
-    dis.plot_violin('ecce', data_organelle, save_path, name)
+        if len(data_sample_organelle) != 0:
+            print("# Export organelle -ln(p) ...")
+            dis.plot_minus_ln_p(inc, limit_organelle, repeat, 'size', data_organelle, ctrl_lst, name, save_path)
+            dis.plot_minus_ln_p(inc, limit_organelle, repeat, 'raw_int', data_organelle, ctrl_lst, name, save_path)
+            dis.plot_minus_ln_p(inc, limit_organelle, repeat, 'circ', data_organelle, ctrl_lst, name, save_path)
+            dis.plot_minus_ln_p(inc, limit_organelle, repeat, 'ecce', data_organelle, ctrl_lst, name, save_path)
+            print("# Export organelle violin plots ...")
+            dis.plot_violin('size', data_organelle, save_path, name)
+            dis.plot_violin('raw_int', data_organelle, save_path, name)
+            dis.plot_violin('circ', data_organelle, save_path, name)
+            dis.plot_violin('ecce', data_organelle, save_path, name)
 
 data_frap = pd.DataFrame({'sample': data_name, 'n_curve': data_frap_n_curve, 'limit': data_frap_phenotype_limit,
                           'mob': data_frap_phenotype_mob, 'curve_mob': data_frap_phenotype_curve_mob,
@@ -198,5 +213,3 @@ if not os.path.exists(save_path):
 data_frap.to_csv('%ssummary_p.txt' % save_path, index=False, sep='\t')
 
 print("DONE!")
-
-
