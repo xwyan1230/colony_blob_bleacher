@@ -1,9 +1,9 @@
 import os
 import pandas as pd
 
-multi_data_source = "D:/Xiaowei/data/R_2-2-treatment/"
+multi_data_source = "D:/Xiaowei/data/J_1_treatment/"
 
-transform_name = 'R'
+transform_name = 'J'
 
 analyze_organelle = 'nucleoli'  # only accepts 'sg' or 'nucleoli'
 
