@@ -1,7 +1,7 @@
 import os
 import shutil
 
-data_source = "D:/Xiaowei/data/20210407_SG_frap/"
+data_source = "D:/Xiaowei/data/20210607_screen/"
 
 dirs = [x[0] for x in os.walk(data_source)]
 dirs.pop(0)
