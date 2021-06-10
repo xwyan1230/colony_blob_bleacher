@@ -2,9 +2,8 @@ import pandas as pd
 import os
 import shared.dataframe as dat
 
-data_source = "/Users/xiaoweiyan/Dropbox/LAB/ValeLab/Projects/Blob_bleacher/Exp/20210415_CBB_nucleoliFRAPscreen2/"\
-    "plate2/"
-WT = 'WT'
+data_source = "D:/Xiaowei/data/20210607_screen/"
+WT = 'NT'
 
 data_p_source = ("%sdataSummary/%s/summary/" % (data_source, WT))
 data_value_source = ("%sdataPlots/%s/summary/" % (data_source, WT))
