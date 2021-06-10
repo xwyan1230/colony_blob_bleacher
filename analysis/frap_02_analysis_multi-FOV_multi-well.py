@@ -14,11 +14,11 @@ import os
 
 # Please changes
 # data_source folder ends with /
-multi_data_source = "D:/Xiaowei/data/20210503/data1/"
+multi_data_source = "D:/Xiaowei/data/20210607_screen/data/"
 save_name = 'dataAnalysis'
 analyze_organelle = 'nucleoli'  # only accepts 'sg' or 'nucleoli'
 frap_start_delay = 4  # 50ms default = 4; 100ms default = 5; 200ms default = 6
-analysis_row = ['C']
+analysis_row = ['H']
 
 # values for analysis
 data_c = 0
