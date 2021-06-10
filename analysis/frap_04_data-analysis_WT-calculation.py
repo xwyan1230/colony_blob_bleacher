@@ -1,9 +1,9 @@
 import pandas as pd
 import os
 
-data_source = "D:/Xiaowei/data/20210415_CBB_nucleoliFRAPscreen2/plate2/dataFiles/"
-save_source = "D:/Xiaowei/data/20210415_CBB_nucleoliFRAPscreen2/plate2/WTFiles/NT_F2-F3/"
-WT_lst = ['F2', 'F3']
+data_source = "D:/Xiaowei/data/20210607_screen/dataFiles/"
+save_source = "D:/Xiaowei/data/20210607_screen/WTFiles/NT/"
+WT_lst = ['E12', 'F12', 'G12']
 analyze_organelle = 'nucleoli'  # only accepts 'nucleoli' or 'sg'
 
 data_WT = pd.DataFrame()
