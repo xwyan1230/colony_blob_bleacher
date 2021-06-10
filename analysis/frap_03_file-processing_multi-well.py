@@ -1,8 +1,8 @@
 import os
 import shared.dataframe as dat
 
-multi_data_source = "D:/Xiaowei/data/20210415_CBB_nucleoliFRAPscreen2/plate2/dataAnalysis/"
-save_source = "D:/Xiaowei/data/20210415_CBB_nucleoliFRAPscreen2/plate2/dataFiles/"
+multi_data_source = "D:/Xiaowei/data/20210607_screen/dataAnalysis/"
+save_source = "D:/Xiaowei/data/20210607_screen/dataFiles/"
 
 analyze_organelle = 'nucleoli'  # only accepts 'sg' or 'nucleoli'
 
