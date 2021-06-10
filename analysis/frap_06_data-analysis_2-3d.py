@@ -3,13 +3,13 @@ import pandas as pd
 import shared.display as dis
 import numpy as np
 
-multi_data_source = "D:/Xiaowei/data/20210510_ctrlComparison/dataFiles/"
-WT_source = "D:/Xiaowei/data/20210510/WTFiles/WT_B2-B3-B4/"
-save_source = "D:/Xiaowei/data/20210510_ctrlComparison/dataPlots/WT_P1-P2_P3/"
+multi_data_source = "D:/Xiaowei/data/20210607_screen/dataFiles/"
+WT_source = "D:/Xiaowei/data/20210607_screen/WTFiles/NT/"
+save_source = "D:/Xiaowei/data/20210607_screen/dataPlots/NT/"
 
 analyze_organelle = 'nucleoli'  # only accepts 'sg' or 'nucleoli'
 analysis_mode = 'single_exp'
-export_figure_mode = 'off'
+export_figure_mode = 'on'
 
 bounds_mob = np.array([0, 0.4, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.9, 1, 1.2])
 bounds_t_half = np.array([0, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 3.0])
