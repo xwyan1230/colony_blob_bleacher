@@ -2,14 +2,14 @@ import os
 import pandas as pd
 import shared.display as dis
 
-multi_data_source = "D:/Xiaowei/data/20210510_ctrlComparison/dataFiles/"
-WT_source = "D:/Xiaowei/data/20210510/WTFiles/WT_B2-B3-B4/"
-save_source = "D:/Xiaowei/data/20210510_ctrlComparison/dataSummary/WT_P1-P2_P3/"
-ctrl_lst = ['P1', 'P2', 'P3']
+multi_data_source = "D:/Xiaowei/data/20210607_screen/dataFiles/"
+WT_source = "D:/Xiaowei/data/20210607_screen/WTFiles/NT/"
+save_source = "D:/Xiaowei/data/20210607_screen/dataSummary/NT/"
+ctrl_lst = ['E12', 'F12', 'G12']
 
 analyze_organelle = 'nucleoli'  # only accepts 'sg' or 'nucleoli'
 analysis_mode = 'single_exp'
-export_figure_mode = 'off'
+export_figure_mode = 'on'
 
 inc = 5
 limit_frap = 250
