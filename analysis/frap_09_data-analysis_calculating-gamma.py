@@ -1,8 +1,8 @@
 import pandas as pd
 import numpy as np
 
-data_source = "D:/Xiaowei/data/20210510_ctrlComparison/summary/WT/"
-WT_source = "D:/Xiaowei/data/20210510/WTFiles/WT_B2-B3-B4/"
+data_source = "D:/Xiaowei/data/20210607_screen/summary/NT/"
+WT_source = "D:/Xiaowei/data/20210607_screen/WTFiles/NT/"
 
 analyze_organelle = 'nucleoli'
 analysis_mode = 'single_exp'
