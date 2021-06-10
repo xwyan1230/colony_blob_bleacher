@@ -3,9 +3,9 @@ import shared.display as dis
 import numpy as np
 import os
 
-data_source = "D:/Xiaowei/data/20210510_ctrlComparison/summary/WT/"
-save_source = "D:/Xiaowei/data/20210510_ctrlComparison/volcanoPlots/WT/"
-WT_source = "D:/Xiaowei/data/20210510/WTFiles/WT_B2-B3-B4/"
+data_source = "D:/Xiaowei/data/20210607_screen/summary/NT/"
+save_source = "D:/Xiaowei/data/20210607_screen/volcanoPlots/NT/"
+WT_source = "D:/Xiaowei/data/20210607_screen/WTFiles/NT/"
 
 analyze_organelle = 'nucleoli'
 analysis_mode = 'single_exp'
