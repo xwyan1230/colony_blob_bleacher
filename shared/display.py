@@ -29,6 +29,10 @@ General functions:
     napari_movie
         FUNCTION: transform uManager movie for napari display
         SYNTAX:   napari_movie(store, cb)
+     
+    plot_line
+        FUNCTION: plot lines between a series dots
+        SYNTAX:   plot_line(x1: list, y1: list, x2: list, y2: list)  
 
 Specific output/display (save space in the main script):
     
@@ -100,6 +104,14 @@ Specific output/display (save space in the main script):
         FUNCTION: plot volcano plot for FRAP screen (with hit displayed)
         SYNTAX:   plot_volcano_hit(pd_p: pd.DataFrame, pd_value: pd.DataFrame, pd_gamma: pd.DataFrame, feature: str, 
                   center: float, threshold: float, show_gene: str, save_path: str)
+    
+    plot_comparison_dot
+        FUNCTION: plot dot scatter plot for screen comparison
+        SYNTAX:   plot_comparison_dot(data: pd.DataFrame, feature: str, save_path: str)
+    
+    plot_comparison_flow
+        FUNCTION: plot flow plot for screen comparison
+        SYNTAX:   plot_comparison_flow(data_p: pd.DataFrame, data_value: pd.DataFrame, feature: str, save_path: str)
 """
 
 # ---------------------------------------------------------------------------------------------------
@@ -175,6 +187,22 @@ def napari_movie(store, cb):
     mov = np.stack(pixels_tseries, axis=0)
 
     return mov
+
+
+def plot_line(x1: list, y1: list, x2: list, y2: list):
+    """
+    Plot lines between a series dots
+
+    :param x1: list of x1
+    :param y1: list of y1
+    :param x2: list of x2
+    :param y2: list of y2
+    :return:
+    """
+    for i in range(len(x1)):
+        x = [x1[i], x2[i]]
+        y = [y1[i], y2[i]]
+        plt.plot(x, y, alpha=0.5, linewidth=0.5, c='#A9A9A9')
 
 # ---------------------------------------------------------------------------------------------------
 # SPECIFIC FUNCTIONS
@@ -767,4 +795,44 @@ def plot_volcano_hit(pd_p: pd.DataFrame, pd_value: pd.DataFrame, pd_gamma: pd.Da
     plt.legend(loc=4, bbox_to_anchor=(0.7, 0, 0.3, 0.3))
 
     plt.savefig('%s%s_hit.pdf' % (save_path, feature))
+    plt.close()
+
+
+def plot_comparison_dot(data: pd.DataFrame, feature: str, save_path: str):
+    """
+    Plot dot scatter plot for screen comparison
+
+    :param data: pd.DataFrame, dataframe that contains value data for both screens
+    :param feature: str, plotting feature, column name
+    :param save_path: str, saving path
+    :return:
+    """
+    feature1 = '%s1' % feature
+    plt.figure(figsize=(9, 6))
+    plt.scatter(data[feature], data[feature1], s=6, c='#A9A9A9')
+    plt.xlabel(feature)
+    plt.savefig('%s%s_comparison_dot.pdf' % (save_path, feature))
+    plt.close()
+
+
+def plot_comparison_flow(data_p: pd.DataFrame, data_value: pd.DataFrame, feature: str, save_path: str):
+    """
+    Plot flow plot for screen comparison
+
+    :param data_p: dataframe that contains p data for both screens
+    :param data_value: dataframe that contains value data for both screens
+    :param feature: str, plotting feature, column name
+    :param save_path: str, saving path
+    :return:
+    """
+    plt.figure(figsize=(9, 6))
+    plot_line(data_value['%s_centered' % feature].tolist(), data_p[feature].tolist(),
+              data_value['%s1_centered' % feature].tolist(), data_p['%s1' % feature].tolist())
+    plt.scatter(data_value['%s_centered' % feature], data_p[feature], s=6, c='#FF8C00', label='rep1')
+    plt.scatter(data_value['%s1_centered' % feature], data_p['%s1' % feature], s=6, c='#DDA0DD', label='rep2')
+    plt.xlabel(feature)
+    plt.ylabel('-ln(p)')
+    plt.legend(loc=4, bbox_to_anchor=(0.7, 0, 0.3, 0.3))
+
+    plt.savefig('%s%s_comparison_flow.pdf' % (save_path, feature))
     plt.close()
