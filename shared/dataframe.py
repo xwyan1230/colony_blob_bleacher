@@ -156,7 +156,7 @@ def copy_based_on_index(dataframe1: pd.DataFrame, dataframe2: pd.DataFrame,
                 value_lst[j].append(target[column_lst2[j]])
         else:
             for j in range(len(column_lst1)):
-                value_lst[j].append('na')
+                value_lst[j].append(np.nan)
     dataframe1 = add_columns(dataframe1, column_lst1, value_lst)
 
     return dataframe1
