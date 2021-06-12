@@ -7,6 +7,7 @@ import pandas as pd
 from scipy.stats import ks_2samp
 import seaborn as sns
 import matplotlib.colors as colors
+import shared.math_functions as mat
 
 """
 # ---------------------------------------------------------------------------------------------------
@@ -810,7 +811,15 @@ def plot_comparison_dot(data: pd.DataFrame, feature: str, save_path: str):
     feature1 = '%s1' % feature
     plt.figure(figsize=(9, 6))
     plt.scatter(data[feature], data[feature1], s=6, c='#A9A9A9')
+
+    screen_fit = mat.fitting_linear(data[feature].tolist(), data[feature1].tolist())
+    val_max = np.max(data[feature])
+    val_min = np.min(data[feature])
+    x = np.linspace(val_min*0.9, val_max*1.1, 1000)
+    plt.plot(x, screen_fit[2]*x+screen_fit[3], linestyle='--', label='R2=%s' % screen_fit[1])
+
     plt.xlabel(feature)
+    plt.legend(loc=4, bbox_to_anchor=(0.7, 0, 0.3, 0.3))
     plt.savefig('%s%s_comparison_dot.pdf' % (save_path, feature))
     plt.close()
 
