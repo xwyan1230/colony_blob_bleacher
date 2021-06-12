@@ -189,6 +189,7 @@ def r_square(y: list, y_fit: list):
     :param y_fit: values from fitting
     :return: r_squared
     """
+
     ss_res = np.sum([(a - b) ** 2 for a, b in zip(y, y_fit)])
     ss_tot = np.sum([(a - np.mean(y)) ** 2 for a in y])
     r2 = 1 - (ss_res / ss_tot)
@@ -274,7 +275,7 @@ def fitting_linear(x: list, y: list):
 
     y_fit = []
     for j in range(len(y)):
-        y_fit.append(linear(j, a, b))
+        y_fit.append(linear(x[j], a, b))
     r2 = r_square(y, y_fit)
 
     return y_fit, r2, a, b
@@ -303,7 +304,7 @@ def fitting_single_exp_decay(x: list, y: list):
 
     y_fit = []
     for j in range(len(y)):
-        y_fit.append(single_exp_decay(j, a, b, c))
+        y_fit.append(single_exp_decay(x[j], a, b, c))
     r2 = r_square(y, y_fit)
 
     return y_fit, r2, a, b, c
