@@ -2,7 +2,9 @@ import os
 import pandas as pd
 import shared.display as dis
 import numpy as np
+from datetime import datetime
 
+master_folder = "D:/Xiaowei/data/20210607_screen/"
 multi_data_source = "D:/Xiaowei/data/20210607_screen/dataFiles/"
 WT_source = "D:/Xiaowei/data/20210607_screen/WTFiles/NT/"
 save_source = "D:/Xiaowei/data/20210607_screen/dataPlots/NT/"
@@ -15,6 +17,30 @@ bounds_mob = np.array([0, 0.4, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 0.8, 0.9, 1, 1.2
 bounds_t_half = np.array([0, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 3.0])
 bounds_slope = np.array([0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5, 0.55, 0.6, 0.65, 0.7, 0.75, 1.0])
 
+# log all the running info
+if not os.path.exists("%sscreen_processing_log.txt" % master_folder):
+    f = open("%sscreen_processing_log.txt" % master_folder, "w+")
+else:
+    f = open("%sscreen_processing_log.txt" % master_folder, "a+")
+
+now = datetime.now()
+dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+f.write("datetime: %s\n" % dt_string)
+f.write("code_running: %s\n" % __file__)
+f.write("master_folder: %s\n" % master_folder)
+f.write("multi_data_source: %s\n" % multi_data_source)
+f.write("WT_source: %s\n" % WT_source)
+f.write("save_source: %s\n" % save_source)
+f.write("analyze_organelle: %s\n" % analyze_organelle)
+f.write("analysis_mode: %s\n" % analysis_mode)
+f.write("export_figure_mode: %s\n" % export_figure_mode)
+f.write("figure_bounds_mobile_fraction: %s\n" % bounds_mob)
+f.write("figure_bounds_t_half: %s\n" % bounds_t_half)
+f.write("figure_bounds_slope: %s\n\n" % bounds_slope)
+
+f.close()
+
+# script starts
 multi_dirs = [x for x in os.listdir(multi_data_source)]
 if '.DS_Store' in multi_dirs:
     multi_dirs.remove('.DS_Store')
