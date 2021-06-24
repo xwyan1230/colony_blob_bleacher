@@ -1,11 +1,32 @@
 import pandas as pd
 import os
+from datetime import datetime
 
+master_folder = "D:/Xiaowei/data/20210607_screen/"
 data_source = "D:/Xiaowei/data/20210607_screen/dataFiles/"
 save_source = "D:/Xiaowei/data/20210607_screen/WTFiles/NT/"
 WT_lst = ['E12', 'F12', 'G12']
 analyze_organelle = 'nucleoli'  # only accepts 'nucleoli' or 'sg'
 
+# log all the running info
+if not os.path.exists("%sscreen_processing_log.txt" % master_folder):
+    f = open("%sscreen_processing_log.txt" % master_folder, "w+")
+else:
+    f = open("%sscreen_processing_log.txt" % master_folder, "a+")
+
+now = datetime.now()
+dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+f.write("datetime: %s\n" % dt_string)
+f.write("code_running: %s\n" % __file__)
+f.write("master_folder: %s\n" % master_folder)
+f.write("data_source: %s\n" % data_source)
+f.write("save_source: %s\n" % save_source)
+f.write("WT_list: %s\n" % WT_lst)
+f.write("analyze_organelle: %s\n\n" % analyze_organelle)
+
+f.close()
+
+# script starts
 data_WT = pd.DataFrame()
 data_ctrl_WT = pd.DataFrame()
 data_log_WT = pd.DataFrame()
