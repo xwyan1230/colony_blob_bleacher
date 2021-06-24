@@ -1,9 +1,27 @@
 import pandas as pd
 import os
 import shared.dataframe as dat
+from datetime import datetime
 
+master_folder = "D:/Xiaowei/data/20210607_screen/"
 data_source = "D:/Xiaowei/data/20210607_screen/"
 WT = 'NT'
+
+# log all the running info
+if not os.path.exists("%sscreen_processing_log.txt" % master_folder):
+    f = open("%sscreen_processing_log.txt" % master_folder, "w+")
+else:
+    f = open("%sscreen_processing_log.txt" % master_folder, "a+")
+
+now = datetime.now()
+dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+f.write("datetime: %s\n" % dt_string)
+f.write("code_running: %s\n" % __file__)
+f.write("master_folder: %s\n" % master_folder)
+f.write("data_source: %s\n" % data_source)
+f.write("WT: %s\n\n" % WT)
+
+f.close()
 
 data_p_source = ("%sdataSummary/%s/summary/" % (data_source, WT))
 data_value_source = ("%sdataPlots/%s/summary/" % (data_source, WT))
