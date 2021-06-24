@@ -3,7 +3,7 @@ import pandas as pd
 import numpy as np
 
 multi_data_source = "D:/Xiaowei/data/20210607_screen/dataFiles/"
-save_source = "D:/Xiaowei/data/20210607_screen/dataPlots/NT/"
+save_source = "D:/Xiaowei/data/20210607_screen/dataStdev/NT/"
 
 analyze_organelle = 'nucleoli'  # only accepts 'sg' or 'nucleoli'
 analysis_mode = 'single_exp'
