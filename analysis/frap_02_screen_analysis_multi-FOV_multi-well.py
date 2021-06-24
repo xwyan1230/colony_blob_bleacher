@@ -10,10 +10,12 @@ import shared.display as dis
 import shared.objects as obj
 import shared.bleach_points as ble
 import shared.math_functions as mat
+from datetime import datetime
 import os
 
 # Please changes
 # data_source folder ends with /
+master_folder = "D:/Xiaowei/data/20210607_screen/"
 multi_data_source = "D:/Xiaowei/data/20210607_screen/data/"
 save_name = 'dataAnalysis'
 analyze_organelle = 'nucleoli'  # only accepts 'sg' or 'nucleoli'
@@ -26,6 +28,16 @@ pos = 0
 num_dilation = 3  # number of dilation from the coordinate;
 # determines analysis size of the analysis spots; default = 3
 
+# modes
+mode_bleach_detection = 'single-offset'  # only accepts 'single-raw' or 'single-offset'
+frap_start_mode = 'min'  # only accepts 'delay' or 'min'
+fitting_mode = 'single_exp'  # accepts 'single_exp', 'double_exp', 'soumpasis', 'ellenberg', 'optimal'
+
+"""
+# ---------------------------------------------------------------------------------------------------
+# PLEASE DO NOT CHANGE AFTER THIS
+# ---------------------------------------------------------------------------------------------------
+"""
 # presets
 if analyze_organelle == 'sg':
     thresholding = 'na'
@@ -39,17 +51,32 @@ else:  # for 'nucleoli'
     max_size = 1000  # maximum size; nucleoli default = 1000;
     # larger ones are generally cells without nucleoli
 
-# modes
-mode_bleach_detection = 'single-offset'  # only accepts 'single-raw' or 'single-offset'
-frap_start_mode = 'min'  # only accepts 'delay' or 'min'
-fitting_mode = 'single_exp'  # accepts 'single_exp', 'double_exp', 'soumpasis', 'ellenberg', 'optimal'
+# log all the running info
+if not os.path.exists("%sscreen_processing_log.txt" % master_folder):
+    f = open("%sscreen_processing_log.txt" % master_folder, "w+")
+else:
+    f = open("%sscreen_processing_log.txt" % master_folder, "a+")
 
-"""
-# ---------------------------------------------------------------------------------------------------
-# PLEASE DO NOT CHANGE AFTER THIS
-# ---------------------------------------------------------------------------------------------------
-"""
+now = datetime.now()
+dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+f.write("datetime: %s\n" % dt_string)
+f.write("code_running: %s\n" % __file__)
+f.write("master_folder: %s\n" % master_folder)
+f.write("multi_data_source: %s\n" % multi_data_source)
+f.write("save_name: %s\n" % save_name)
+f.write("analyze_organelle: %s\n" % analyze_organelle)
+f.write("frap_start_delay: %d\n" % frap_start_delay)
+f.write("analysis_row: %s\n" % analysis_row)
+f.write("analysis_channel: %d\n" % data_c)
+f.write("analysis_position: %d\n" % pos)
+f.write("num_dilation: %d\n" % num_dilation)
+f.write("bleach_spot_detection_mode: %s\n" % mode_bleach_detection)
+f.write("frap_start_mode: %s\n" % frap_start_mode)
+f.write("fitting_mode: %s\n\n" % fitting_mode)
 
+f.close()
+
+# script starts
 multi_dirs = [x for x in os.listdir(multi_data_source)]
 if '.DS_Store' in multi_dirs:
     multi_dirs.remove('.DS_Store')
