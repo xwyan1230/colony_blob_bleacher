@@ -1,12 +1,32 @@
 import os
 import pandas as pd
 import numpy as np
+from datetime import datetime
 
+master_folder = "D:/Xiaowei/data/20210607_screen/"
 multi_data_source = "D:/Xiaowei/data/20210607_screen/dataFiles/"
 save_source = "D:/Xiaowei/data/20210607_screen/dataStdev/NT/"
 
 analyze_organelle = 'nucleoli'  # only accepts 'sg' or 'nucleoli'
 analysis_mode = 'single_exp'
+
+# log all the running info
+if not os.path.exists("%sscreen_processing_log.txt" % master_folder):
+    f = open("%sscreen_processing_log.txt" % master_folder, "w+")
+else:
+    f = open("%sscreen_processing_log.txt" % master_folder, "a+")
+
+now = datetime.now()
+dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+f.write("datetime: %s\n" % dt_string)
+f.write("code_running: %s\n" % __file__)
+f.write("master_folder: %s\n" % master_folder)
+f.write("multi_data_source: %s\n" % multi_data_source)
+f.write("save_source: %s\n" % save_source)
+f.write("analyze_organelle: %s\n" % analyze_organelle)
+f.write("analysis_mode: %s\n\n" % analysis_mode)
+
+f.close()
 
 multi_dirs = [x for x in os.listdir(multi_data_source)]
 if '.DS_Store' in multi_dirs:
